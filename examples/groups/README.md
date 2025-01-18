@@ -10,15 +10,21 @@ This example copies Skip's groups and adapts it to Go.
 
 ## goskip's Example
 
--   [skip](./skip/skip.ts) defines the `skip` service.
+-   [skip](./skip.ts) defines the `skip` service.
 -   [main.go](./main.go) queries the skip service to change and read the state.
 
 ### Running the Example
 
+Before running, make sure you have the dependencies installed:
+
+```bash
+cd examples && bun install
+```
+
 Run two terminals, one with:
 
 ```bash
-bun run examples/groups/skip/skip.ts
+bun run examples/groups/skip.ts
 ```
 
 And the other with:
