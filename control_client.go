@@ -14,7 +14,7 @@ type ControlClient interface {
 
 	// GetResourceKey retrieves the data associated with a specific key in a resource.
 	// Corresponds to the POST /v1/snapshot/:resource/lookup endpoint.
-	GetResourceKey(ctx context.Context, resource string, key string, params interface{}) ([]byte, error)
+	GetResourceKey(ctx context.Context, resource string, key interface{}, params interface{}) ([]byte, error)
 
 	// UpdateInputCollection updates a collection of key-value pairs in the specified input collection.
 	// Corresponds to the PATCH /v1/inputs/:collection endpoint.
@@ -57,7 +57,7 @@ func (c *controlClientImpl) GetResourceSnapshot(ctx context.Context, resource st
 	return io.ReadAll(resp.Body)
 }
 
-func (c *controlClientImpl) GetResourceKey(ctx context.Context, resource string, key string, params interface{}) ([]byte, error) {
+func (c *controlClientImpl) GetResourceKey(ctx context.Context, resource string, key interface{}, params interface{}) ([]byte, error) {
 	url := fmt.Sprintf("%s/snapshot/%s/lookup", c.baseURL, resource)
 	body := map[string]interface{}{
 		"key":    key,
