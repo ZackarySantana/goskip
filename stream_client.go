@@ -15,6 +15,7 @@ const (
 	UpdateStreamType StreamType = "update"
 )
 
+// StreamClient defines access to Skip's Stream API.
 type StreamClient interface {
 	// StreamData is a live data stream for a resource instance represented by the UUID.
 	// Corresponds to the GET /v1/streams/:uuid endpoint.
@@ -25,6 +26,7 @@ type streamingClientImpl struct {
 	baseURL string
 }
 
+// NewStreamingClient creates a new instance of StreamClient.
 func NewStreamingClient(baseURL string) StreamClient {
 	return &streamingClientImpl{baseURL: baseURL}
 }

@@ -6,6 +6,7 @@ import (
 	"io"
 )
 
+// ControlClient defines access to Skip's Control API.
 type ControlClient interface {
 	// GetSnapshot retrieves a snapshot of the entire resource.
 	// Corresponds to the POST /v1/snapshot/:resource endpoint.
@@ -16,6 +17,7 @@ type ControlClient interface {
 	GetResourceKey(ctx context.Context, resource string, key string, params interface{}) ([]byte, error)
 
 	// UpdateInputCollection updates a collection of key-value pairs in the specified input collection.
+	// Corresponds to the PATCH /v1/inputs/:collection endpoint.
 	UpdateInputCollection(ctx context.Context, collection string, updates []CollectionUpdate) error
 
 	// UpdateInputKey updates a specific key in the specified input collection.
@@ -35,6 +37,7 @@ type controlClientImpl struct {
 	baseURL string
 }
 
+// NewControlClient creates a new instance of ControlClient.
 func NewControlClient(baseURL string) ControlClient {
 	return &controlClientImpl{baseURL: baseURL}
 }
@@ -116,7 +119,6 @@ func (c *controlClientImpl) CreateResourceInstance(ctx context.Context, resource
 		return "", fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
-	// returns a uuid
 	uuid, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", fmt.Errorf("failed to read response body: %w", err)
