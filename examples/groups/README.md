@@ -11,7 +11,7 @@ This example copies Skip's groups and adapts it to Go.
 ## goskip's Example
 
 -   [skip](./skip.ts) defines the `skip` service.
--   [main.go](./main.go) queries the skip service to change and read the state.
+-   [client.go](./client.go) queries the skip service to change and read the state.
 
 ### Running the Example
 
@@ -30,13 +30,13 @@ bun run examples/groups/skip.ts
 And the other with:
 
 ```bash
-go run examples/groups/main.go
+go run examples/groups/client.go
 ```
 
 You should see the output like:
 
 ```bash
-~/goskip$ go run examples/groups/main.go
+~/goskip$ go run examples/groups/client.go
 Received Event: init, Data: [{Key:1001 Values:[1]}]
 Setting Carol to active
 Received Event: update, Data: [{Key:1001 Values:[1 2]} {Key:1002 Values:[2]}]
@@ -48,10 +48,10 @@ Removing Carol and adding Eve to group 2
 Received Event: update, Data: [{Key:1002 Values:[3]}]
 ```
 
-Running the `main.go` file again will result in no updates, as the objects are already in that state.
+Running the `client.go` file again will result in no updates, as the objects are already in that state.
 
 ```bash
-~/goskip$ go run examples/groups/main.go
+~/goskip$ go run examples/groups/client.go
 Received Event: init, Data: [{Key:1001 Values:[2 3]} {Key:1002 Values:[3]} {Key:1002 Values:[3]}]
 Setting Carol to active
 Setting Alice to inactive

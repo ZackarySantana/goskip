@@ -8,14 +8,14 @@ goskip is an unoffical open-source client for [skip](https://github.com/SkipLabs
 
 ## Examples
 
-The [examples](./examples) directory contains examples that have a `main.go` file and a `skip` directory. To run an example, open two terminals and run:
+The [examples](./examples) directory contains examples that have a `client.go` file and a `skip` directory. To run an example, open two terminals and run:
 
 ```bash
 bun run examples/<example>/skip.ts
 ```
 
 ```bash
-go run examples/<example>/main.go
+go run examples/<example>/client.go
 ```
 
 These are the examples available:
