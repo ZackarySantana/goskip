@@ -13,6 +13,8 @@ See the [getting started guide](https://skiplabs.io/docs/getting_started) to wal
 
 ## Documentation
 
+[Godocs](https://pkg.go.dev/github.com/zackarysantana/goskip)
+
 ## Examples
 
 The [examples](./examples) directory contains examples that have a `main.go` file and a `skip` directory. To run an example, open two terminals and run:
