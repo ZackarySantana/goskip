@@ -10,5 +10,5 @@ skip-stop:
 	docker rm -f goskip
 
 skip-publish:
-	docker build -t lidtop/goskip goskip-image
-	docker push lidtop/goskip
+	docker build -t lidtop/goskip:$(TAG) goskip-image
+	docker push lidtop/goskip:$(TAG)
