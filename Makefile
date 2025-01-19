@@ -12,3 +12,7 @@ skip-stop:
 skip-publish:
 	docker build -t lidtop/goskip:$(TAG) goskip-image
 	docker push lidtop/goskip:$(TAG)
+
+go-publish:
+	git tag $(TAG)
+	git push origin $(TAG)
