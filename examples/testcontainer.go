@@ -10,6 +10,9 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
+// StartSkipContainer creates a Skip container and returns a cleanup function to terminate it.
+// The given path is the path to the skip.ts file to be used in the container.
+// This is not suitable for production use but is useful for testing and development.
 func StartSkipContainer(ctx context.Context, path string) (func(), error) {
 	start := time.Now()
 	fmt.Println("Starting skip container...")
