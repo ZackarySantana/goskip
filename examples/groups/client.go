@@ -60,17 +60,17 @@ func main() {
 	}()
 	time.Sleep(1 * time.Second)
 
-	data, err := controlClient.GetResourceSnapshot(ctx, "active_friends", 0)
+	snapshot, err := skip.ReadResourceSnapshot[float64, float64](controlClient.GetResourceSnapshot(ctx, "active_friends", 0))
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Resource snapshot: %s\n", string(data))
+	fmt.Printf("Resource snapshot: '%v'\n", snapshot)
 
-	data, err = controlClient.GetResourceKey(ctx, "active_friends", 1001, 0)
+	key, err := skip.ReadResourceKey[float64](controlClient.GetResourceKey(ctx, "active_friends", 1001, 0))
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Resource key: %s\n", string(data))
+	fmt.Printf("Resource key: %v\n", key)
 
 	fmt.Println("Setting Carol to active")
 	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionUpdate{
