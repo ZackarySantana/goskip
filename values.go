@@ -2,31 +2,26 @@ package skip
 
 import "fmt"
 
-// SkipValue represents a value that will be used in a Skip collection.
-type SkipValue interface {
-	// Value returns the underlying value.
-	Value() interface{}
-}
-
-type skipValueImpl struct {
+// skipValue represents a value that will be used in a Skip collection.
+type skipValue struct {
 	v interface{}
 }
 
-func (s *skipValueImpl) Value() interface{} {
+func (s *skipValue) Value() interface{} {
 	return s.v
 }
 
-func (s *skipValueImpl) String() string {
+func (s *skipValue) String() string {
 	if s == nil || s.v == nil {
 		return "nil"
 	}
 	return fmt.Sprintf("%v", s.v)
 }
 
-func Values[T any](v ...T) []SkipValue {
-	values := make([]SkipValue, len(v))
+func Values[T any](v ...T) []skipValue {
+	values := make([]skipValue, len(v))
 	for i, value := range v {
-		values[i] = &skipValueImpl{v: value}
+		values[i] = skipValue{v: value}
 	}
 	return values
 }

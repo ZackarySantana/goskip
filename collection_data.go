@@ -9,7 +9,7 @@ import (
 // This is used when posting new data to a collection.
 type CollectionData struct {
 	Key    interface{}
-	Values []SkipValue
+	Values []skipValue
 }
 
 func (u *CollectionData) MarshalJSON() ([]byte, error) {
@@ -33,9 +33,9 @@ func (u *CollectionData) UnmarshalJSON(data []byte) error {
 	if !ok {
 		return fmt.Errorf("invalid data type for values")
 	}
-	u.Values = make([]SkipValue, len(values))
+	u.Values = make([]skipValue, len(values))
 	for i, value := range values {
-		u.Values[i] = &skipValueImpl{v: value}
+		u.Values[i] = skipValue{v: value}
 	}
 	return nil
 }
