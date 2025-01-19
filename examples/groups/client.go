@@ -51,6 +51,9 @@ func main() {
 			panic(err)
 		}
 
+		ctx, cancel := context.WithCancel(ctx)
+		defer cancel()
+
 		err = streamClient.StreamData(ctx, string(uuid), func(event skip.StreamType, data []skip.CollectionUpdate) {
 			fmt.Printf("Received Event: %s, Data: %v\n", event, data)
 		})
