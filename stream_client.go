@@ -16,21 +16,21 @@ const (
 
 // StreamClient defines access to Skip's Stream API.
 type StreamClient interface {
-	// StreamData is a live data stream for a resource instance represented by the UUID.
+	// Stream is a live data stream for a resource instance represented by the UUID.
 	// Corresponds to the GET /v1/streams/:uuid endpoint.
-	StreamData(ctx context.Context, uuid string, callback func(event StreamType, data []byte) error) error
+	Stream(ctx context.Context, uuid string, callback func(event StreamType, data []byte) error) error
 }
 
-type streamingClientImpl struct {
+type streamClientImpl struct {
 	baseURL string
 }
 
-// NewStreamingClient creates a new instance of StreamClient.
-func NewStreamingClient(baseURL string) StreamClient {
-	return &streamingClientImpl{baseURL: baseURL}
+// NewStreamClient creates a new instance of StreamClient.
+func NewStreamClient(baseURL string) StreamClient {
+	return &streamClientImpl{baseURL: baseURL}
 }
 
-func (s *streamingClientImpl) StreamData(ctx context.Context, uuid string, callback func(event StreamType, data []byte) error) error {
+func (s *streamClientImpl) Stream(ctx context.Context, uuid string, callback func(event StreamType, data []byte) error) error {
 	url := fmt.Sprintf("%s/streams/%s", s.baseURL, uuid)
 	resp, err := sendRequest(ctx, "GET", url, nil)
 	if err != nil {

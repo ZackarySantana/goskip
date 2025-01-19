@@ -30,7 +30,7 @@ func CreateClients(ctx context.Context) (skip.ControlClient, skip.StreamClient, 
 	}
 
 	controlClient := skip.NewControlClient(os.Getenv("SKIP_CONTROL_URL"))
-	streamClient := skip.NewStreamingClient(os.Getenv("SKIP_STREAM_URL"))
+	streamClient := skip.NewStreamClient(os.Getenv("SKIP_STREAM_URL"))
 
 	return controlClient, streamClient, shutdown, nil
 }
@@ -51,7 +51,7 @@ func main() {
 			panic(err)
 		}
 
-		err = streamClient.StreamData(ctx, string(uuid), skip.ReadStream(func(event skip.StreamType, data []skip.CollectionValue[float64, float64]) error {
+		err = streamClient.Stream(ctx, string(uuid), skip.ReadStream(func(event skip.StreamType, data []skip.CollectionValue[float64, float64]) error {
 			fmt.Printf("Received Event: %s, Data: %v\n", event, data)
 			return nil
 		}))
