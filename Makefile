@@ -1,6 +1,6 @@
 skip:
 	@if [ -z "$(EXAMPLE)" ]; then \
-		echo "Error: EXAMPLE is not set. Please provide it as an environment variable (e.g., make run EXAMPLE=users)."; \
+		echo "Error: EXAMPLE is not set. Please provide it as an environment variable (e.g., make run EXAMPLE=groups)."; \
 		exit 1; \
 	fi
 	docker build -t goskip-dev goskip-image

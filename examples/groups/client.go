@@ -2,10 +2,14 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io"
+	"os"
 	"time"
 
 	skip "github.com/zackarysantana/goskip"
+	"github.com/zackarysantana/goskip/examples"
 )
 
 type UsersValue struct {
@@ -20,9 +24,17 @@ type GroupsValue struct {
 }
 
 func main() {
-	ctx := context.Background()
-	controlClient := skip.NewControlClient("http://localhost:8081/v1")
-	streamClient := skip.NewStreamingClient("http://localhost:8080/v1")
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	shutdown, err := examples.StartSkipContainer(ctx, "examples/groups/skip.ts")
+	if err != nil {
+		panic(err)
+	}
+	defer shutdown()
+
+	controlClient := skip.NewControlClient(os.Getenv("SKIP_CONTROL_URL"))
+	streamClient := skip.NewStreamingClient(os.Getenv("SKIP_STREAM_URL"))
 
 	go func() {
 		uuid, err := controlClient.CreateResourceInstance(ctx, "active_friends", 0)
@@ -33,7 +45,7 @@ func main() {
 		err = streamClient.StreamData(ctx, string(uuid), func(event skip.StreamType, data []skip.CollectionUpdate) {
 			fmt.Printf("Received Event: %s, Data: %v\n", event, data)
 		})
-		if err != nil {
+		if err != nil && !errors.Is(err, io.EOF) && !errors.Is(err, io.ErrUnexpectedEOF) {
 			panic(err)
 		}
 	}()
