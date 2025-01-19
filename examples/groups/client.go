@@ -51,12 +51,10 @@ func main() {
 			panic(err)
 		}
 
-		ctx, cancel := context.WithCancel(ctx)
-		defer cancel()
-
-		err = streamClient.StreamData(ctx, string(uuid), func(event skip.StreamType, data []skip.CollectionUpdate) {
+		err = streamClient.StreamData(ctx, string(uuid), skip.ReadStream(func(event skip.StreamType, data []skip.CollectionValue[float64, float64]) error {
 			fmt.Printf("Received Event: %s, Data: %v\n", event, data)
-		})
+			return nil
+		}))
 		if err != nil && !errors.Is(err, io.EOF) && !errors.Is(err, io.ErrUnexpectedEOF) {
 			panic(err)
 		}
@@ -76,7 +74,7 @@ func main() {
 	fmt.Printf("Resource key: %v\n", key)
 
 	fmt.Println("Setting Carol to active")
-	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionUpdate{
+	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionData{
 		{
 			Key: 2,
 			Values: skip.Values(
@@ -94,7 +92,7 @@ func main() {
 	time.Sleep(1 * time.Second)
 
 	fmt.Println("Setting Alice to inactive")
-	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionUpdate{
+	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionData{
 		{
 			Key: 1,
 			Values: skip.Values(
@@ -112,7 +110,7 @@ func main() {
 	time.Sleep(1 * time.Second)
 
 	fmt.Println("Setting Eve as Bob's friend")
-	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionUpdate{
+	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionData{
 		{
 			Key: 0,
 			Values: skip.Values(
@@ -130,7 +128,7 @@ func main() {
 	time.Sleep(1 * time.Second)
 
 	fmt.Println("Removing Carol and adding Eve to group 2")
-	err = controlClient.UpdateInputCollection(ctx, "groups", []skip.CollectionUpdate{
+	err = controlClient.UpdateInputCollection(ctx, "groups", []skip.CollectionData{
 		{
 			Key: 1002,
 			Values: skip.Values(

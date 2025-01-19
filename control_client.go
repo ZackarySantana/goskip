@@ -18,7 +18,7 @@ type ControlClient interface {
 
 	// UpdateInputCollection updates a collection of key-value pairs in the specified input collection.
 	// Corresponds to the PATCH /v1/inputs/:collection endpoint.
-	UpdateInputCollection(ctx context.Context, collection string, updates []CollectionUpdate) error
+	UpdateInputCollection(ctx context.Context, collection string, updates []CollectionData) error
 
 	// UpdateInputKey updates a specific key in the specified input collection.
 	// Corresponds to the PUT /v1/inputs/:collection/:key endpoint.
@@ -76,7 +76,7 @@ func (c *controlClientImpl) GetResourceKey(ctx context.Context, resource string,
 	return io.ReadAll(resp.Body)
 }
 
-func (c *controlClientImpl) UpdateInputCollection(ctx context.Context, collection string, updates []CollectionUpdate) error {
+func (c *controlClientImpl) UpdateInputCollection(ctx context.Context, collection string, updates []CollectionData) error {
 	url := fmt.Sprintf("%s/inputs/%s", c.baseURL, collection)
 	resp, err := sendRequest(ctx, "PATCH", url, updates)
 	if err != nil {

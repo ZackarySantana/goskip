@@ -5,14 +5,14 @@ import (
 	"fmt"
 )
 
-// CollectionUpdate represents a untyped set of collection values.
+// CollectionData represents a untyped set of collection values.
 // This is used when posting new data to a collection.
-type CollectionUpdate struct {
+type CollectionData struct {
 	Key    interface{}
 	Values []SkipValue
 }
 
-func (u *CollectionUpdate) MarshalJSON() ([]byte, error) {
+func (u *CollectionData) MarshalJSON() ([]byte, error) {
 	values := make([]interface{}, len(u.Values))
 	for i, value := range u.Values {
 		values[i] = value.Value()
@@ -20,7 +20,7 @@ func (u *CollectionUpdate) MarshalJSON() ([]byte, error) {
 	return json.Marshal([]interface{}{u.Key, values})
 }
 
-func (u *CollectionUpdate) UnmarshalJSON(data []byte) error {
+func (u *CollectionData) UnmarshalJSON(data []byte) error {
 	var d []interface{}
 	if err := json.Unmarshal(data, &d); err != nil {
 		return err
@@ -103,4 +103,14 @@ func ReadResourceKey[V any](data []byte, err error) ([]V, error) {
 		}
 	}
 	return values, nil
+}
+
+func ReadStream[K any, V any](callback func(event StreamType, data []CollectionValue[K, V]) error) func(event StreamType, data []byte) error {
+	return func(event StreamType, data []byte) error {
+		snapshot, err := ReadResourceSnapshot[K, V](data, nil)
+		if err != nil {
+			return fmt.Errorf("reading resource snapshot: %w", err)
+		}
+		return callback(event, snapshot)
+	}
 }

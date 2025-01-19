@@ -2,7 +2,6 @@ package skip
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
 	"github.com/tmaxmax/go-sse"
@@ -19,7 +18,7 @@ const (
 type StreamClient interface {
 	// StreamData is a live data stream for a resource instance represented by the UUID.
 	// Corresponds to the GET /v1/streams/:uuid endpoint.
-	StreamData(ctx context.Context, uuid string, callback func(event StreamType, data []CollectionUpdate)) error
+	StreamData(ctx context.Context, uuid string, callback func(event StreamType, data []byte) error) error
 }
 
 type streamingClientImpl struct {
@@ -31,7 +30,7 @@ func NewStreamingClient(baseURL string) StreamClient {
 	return &streamingClientImpl{baseURL: baseURL}
 }
 
-func (s *streamingClientImpl) StreamData(ctx context.Context, uuid string, callback func(event StreamType, data []CollectionUpdate)) error {
+func (s *streamingClientImpl) StreamData(ctx context.Context, uuid string, callback func(event StreamType, data []byte) error) error {
 	url := fmt.Sprintf("%s/streams/%s", s.baseURL, uuid)
 	resp, err := sendRequest(ctx, "GET", url, nil)
 	if err != nil {
@@ -49,16 +48,9 @@ func (s *streamingClientImpl) StreamData(ctx context.Context, uuid string, callb
 			return false
 		}
 
-		var data []CollectionUpdate
-		err = json.Unmarshal([]byte(ev.Data), &data)
-		if err != nil {
-			err = fmt.Errorf("unmarshalling stream data: %w", err)
-			return false
-		}
+		err = callback(StreamType(ev.Type), []byte(ev.Data))
 
-		callback(StreamType(ev.Type), data)
-
-		return true
+		return err == nil
 	})
 
 	return err
