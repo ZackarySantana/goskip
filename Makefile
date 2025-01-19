@@ -8,3 +8,7 @@ skip:
 
 skip-stop:
 	docker rm -f goskip
+
+skip-image-publish:
+	docker build -t lidtop/goskip goskip-image
+	docker push lidtop/goskip
