@@ -15,19 +15,9 @@ This example copies Skip's groups and adapts it to Go.
 
 ### Running the Example
 
-Before running, make sure you have the dependencies installed:
+The example uses test containeres, so the only tools you need installed are `go` and `docker`.
 
-```bash
-cd examples && bun install
-```
-
-Run two terminals, one with:
-
-```bash
-bun run examples/groups/skip.ts
-```
-
-And the other with:
+To run the example, run the following command:
 
 ```bash
 go run examples/groups/client.go
