@@ -1,0 +1,9 @@
+{
+    "name": "goskip-image",
+    "description": "This is the goskip Docker image.",
+    "dependencies": {
+        "@skipruntime/api": "^0.0.6",
+        "@skipruntime/helpers": "^0.0.8",
+        "@skipruntime/server": "^0.0.8"
+    }
+}
