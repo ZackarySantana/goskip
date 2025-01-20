@@ -23,6 +23,56 @@ type GroupsValue struct {
 	Members []int  `json:"members"`
 }
 
+var (
+	usersUpdate1 = []skip.CollectionData{
+		{
+			Key: 2,
+			Values: skip.Values(
+				UsersValue{
+					Name:    "Carol",
+					Active:  true,
+					Friends: []int{0, 1},
+				},
+			),
+		},
+	}
+	usersUpdate2 = []skip.CollectionData{
+		{
+			Key: 1,
+			Values: skip.Values(
+				UsersValue{
+					Name:    "Alice",
+					Active:  false,
+					Friends: []int{0, 2},
+				},
+			),
+		},
+	}
+	usersUpdate3 = []skip.CollectionData{
+		{
+			Key: 0,
+			Values: skip.Values(
+				UsersValue{
+					Name:    "Bob",
+					Active:  true,
+					Friends: []int{1, 2, 3},
+				},
+			),
+		},
+	}
+	groupsUpdate1 = []skip.CollectionData{
+		{
+			Key: 1002,
+			Values: skip.Values(
+				GroupsValue{
+					Name:    "Group 2",
+					Members: []int{0, 3},
+				},
+			),
+		},
+	}
+)
+
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -65,71 +115,28 @@ func main() {
 	fmt.Printf("Resource key: %v\n", key)
 
 	fmt.Println("Setting Carol to active")
-	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionData{
-		{
-			Key: 2,
-			Values: skip.Values(
-				UsersValue{
-					Name:    "Carol",
-					Active:  true,
-					Friends: []int{0, 1},
-				},
-			),
-		},
-	})
+	err = controlClient.UpdateInputCollection(ctx, "users", usersUpdate1)
 	if err != nil {
 		panic(err)
 	}
 	time.Sleep(1 * time.Second)
 
 	fmt.Println("Setting Alice to inactive")
-	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionData{
-		{
-			Key: 1,
-			Values: skip.Values(
-				UsersValue{
-					Name:    "Alice",
-					Active:  false,
-					Friends: []int{0, 2},
-				},
-			),
-		},
-	})
+	err = controlClient.UpdateInputCollection(ctx, "users", usersUpdate2)
 	if err != nil {
 		panic(err)
 	}
 	time.Sleep(1 * time.Second)
 
 	fmt.Println("Setting Eve as Bob's friend")
-	err = controlClient.UpdateInputCollection(ctx, "users", []skip.CollectionData{
-		{
-			Key: 0,
-			Values: skip.Values(
-				UsersValue{
-					Name:    "Bob",
-					Active:  true,
-					Friends: []int{1, 2, 3},
-				},
-			),
-		},
-	})
+	err = controlClient.UpdateInputCollection(ctx, "users", usersUpdate3)
 	if err != nil {
 		panic(err)
 	}
 	time.Sleep(1 * time.Second)
 
 	fmt.Println("Removing Carol and adding Eve to group 2")
-	err = controlClient.UpdateInputCollection(ctx, "groups", []skip.CollectionData{
-		{
-			Key: 1002,
-			Values: skip.Values(
-				GroupsValue{
-					Name:    "Group 2",
-					Members: []int{0, 3},
-				},
-			),
-		},
-	})
+	err = controlClient.UpdateInputCollection(ctx, "groups", groupsUpdate1)
 	if err != nil {
 		panic(err)
 	}
