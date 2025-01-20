@@ -17,12 +17,10 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Verify version string format
-              run: |
-                  if [[ ! "${{ github.event.inputs.image_tag }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-                      echo "Error: Version string must follow the format 'vMAJOR.MINOR.PATCH' (e.g., v1.0.0)."
-                      exit 1
-                  fi
+            - uses: matt-usurp/validate-semver@v2
+              id: semver
+              with:
+                  version: ${{ github.event.inputs.image_tag }}
 
             - name: Checkout repository
               uses: actions/checkout@v3
@@ -36,9 +34,9 @@ jobs:
             - name: Build and tag Docker image
               run: |
                   docker build -t lidtop/goskip:latest .
-                  docker tag lidtop/goskip:latest lidtop/goskip:${{ github.event.inputs.image_tag }}
+                  docker tag lidtop/goskip:latest lidtop/goskip:v${{ steps.semver.outputs.version }}
 
             - name: Push Docker image
               run: |
-                  docker push lidtop/goskip:${{ github.event.inputs.image_tag }}
+                  docker push lidtop/goskip:v${{ steps.semver.outputs.version }}
                   docker push lidtop/goskip:latest
