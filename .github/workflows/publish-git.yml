@@ -38,6 +38,6 @@ jobs:
                     git tag -a "v$TAG_NAME" -m "$TAG_MESSAGE"
                   fi
 
-                  git push origin "$TAG_NAME"
+                  git push origin "v$TAG_NAME"
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
