@@ -20,10 +20,6 @@ type ControlClient interface {
 	// Corresponds to the PATCH /v1/inputs/:collection endpoint.
 	UpdateInputCollection(ctx context.Context, collection string, updates []CollectionData) error
 
-	// UpdateInputKey updates a specific key in the specified input collection.
-	// Corresponds to the PUT /v1/inputs/:collection/:key endpoint.
-	UpdateInputKey(ctx context.Context, collection string, key string, values []interface{}) error
-
 	// CreateResourceInstance creates a new resource instance and returns its UUID.
 	// Corresponds to the POST /v1/streams/:resource endpoint.
 	CreateResourceInstance(ctx context.Context, resource string, params interface{}) (string, error)
@@ -81,22 +77,6 @@ func (c *controlClientImpl) UpdateInputCollection(ctx context.Context, collectio
 	resp, err := sendRequest(ctx, "PATCH", url, updates)
 	if err != nil {
 		return fmt.Errorf("failed to update input collection: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if isSuccessStatus(resp.StatusCode) {
-		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
-
-	return nil
-}
-
-func (c *controlClientImpl) UpdateInputKey(ctx context.Context, collection string, key string, values []interface{}) error {
-	url := fmt.Sprintf("%s/inputs/%s/%s", c.baseURL, collection, key)
-	fmt.Println(url)
-	resp, err := sendRequest(ctx, "PUT", url, values)
-	if err != nil {
-		return fmt.Errorf("failed to update input key: %w", err)
 	}
 	defer resp.Body.Close()
 
