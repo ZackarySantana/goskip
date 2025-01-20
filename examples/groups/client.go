@@ -23,8 +23,8 @@ type GroupsValue struct {
 	Members []int  `json:"members"`
 }
 
-func CreateClients(ctx context.Context) (skip.ControlClient, skip.StreamClient, func(), error) {
-	shutdown, err := examples.StartSkipContainer(ctx, "examples/groups/skip.ts")
+func CreateClients(ctx context.Context, path string) (skip.ControlClient, skip.StreamClient, func(), error) {
+	shutdown, err := examples.StartSkipContainer(ctx, path)
 	if err != nil {
 		return nil, nil, nil, err
 	}
@@ -39,7 +39,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	controlClient, streamClient, shutdown, err := CreateClients(ctx)
+	controlClient, streamClient, shutdown, err := CreateClients(ctx, "examples/groups/skip.ts")
 	if err != nil {
 		panic(err)
 	}
