@@ -13,7 +13,7 @@ defaults:
         working-directory: goskip-image
 
 jobs:
-    build_and_publish:
+    publish_image:
         runs-on: ubuntu-latest
 
         steps:

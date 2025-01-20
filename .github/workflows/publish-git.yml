@@ -12,7 +12,7 @@ on:
                 required: false
 
 jobs:
-    publish_tag:
+    publish_git:
         runs-on: ubuntu-latest
 
         steps:
@@ -28,6 +28,9 @@ jobs:
               run: |
                   TAG_NAME="${{ steps.semver.outputs.version }}"
                   TAG_MESSAGE="${{ github.event.inputs.tag_message }}"
+
+                  git config --global user.name 'Github Actions'
+                  git config --global user.email '64446617+ZackarySantana@users.noreply.github.com'
 
                   if [ -z "$TAG_MESSAGE" ]; then
                     git tag "v$TAG_NAME"
