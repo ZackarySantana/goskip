@@ -23,18 +23,6 @@ type GroupsValue struct {
 	Members []int  `json:"members"`
 }
 
-func CreateClients(ctx context.Context, path string) (skip.ControlClient, skip.StreamClient, func(), error) {
-	shutdown, err := examples.StartSkipContainer(ctx, path)
-	if err != nil {
-		return nil, nil, nil, err
-	}
-
-	controlClient := skip.NewControlClient(os.Getenv("SKIP_CONTROL_URL"))
-	streamClient := skip.NewStreamClient(os.Getenv("SKIP_STREAM_URL"))
-
-	return controlClient, streamClient, shutdown, nil
-}
-
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
