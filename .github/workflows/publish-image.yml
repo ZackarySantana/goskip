@@ -21,6 +21,9 @@ jobs:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
+            - name: Change directory to goskip-image
+              run: cd goskip-image
+
             - name: Build and tag Docker image
               run: |
                   docker build -t lidtop/goskip:latest .
