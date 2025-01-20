@@ -1,6 +1,6 @@
 module github.com/zackarysantana/goskip
 
-go 1.22.2
+go 1.22.11
 
 require (
 	github.com/stretchr/testify v1.9.0
