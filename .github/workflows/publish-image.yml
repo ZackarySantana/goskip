@@ -34,9 +34,9 @@ jobs:
             - name: Build and tag Docker image
               run: |
                   docker build -t lidtop/goskip:latest .
-                  docker tag lidtop/goskip:latest lidtop/goskip:v${{ steps.semver.outputs.version }}
+                  docker tag lidtop/goskip:latest lidtop/goskip:${{ steps.semver.outputs.version }}
 
             - name: Push Docker image
               run: |
-                  docker push lidtop/goskip:v${{ steps.semver.outputs.version }}
+                  docker push lidtop/goskip:${{ steps.semver.outputs.version }}
                   docker push lidtop/goskip:latest
