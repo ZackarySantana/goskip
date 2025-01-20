@@ -7,3 +7,7 @@ An example usage of running this image is:
 ```bash
 docker run -v ./examples/$(EXAMPLE)/skip.ts:/app/skip.ts -p 8080:8080 -p 8081:8081 lidtop/goskip
 ```
+
+## Docker Hub
+
+This is published to Docker Hub as [lidtop/goskip](https://hub.docker.com/repository/docker/lidtop/goskip).

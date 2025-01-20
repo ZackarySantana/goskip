@@ -94,6 +94,10 @@ These are the examples available:
 
 -   [Groups](./examples/groups)
 
+## goskip Image
+
+This repository also manages a simple Skip image [goskip-image](./goskip-image) that's published to Docker Hub as [lidtop/goskip](https://hub.docker.com/repository/docker/lidtop/goskip).
+
 ## Contributing
 
 Contributions and pull requests are welcome! Feel free to drop an issue if you have any ideas or suggestions.
