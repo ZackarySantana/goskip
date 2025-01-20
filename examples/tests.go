@@ -4,7 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"testing"
+	"time"
 
+	"github.com/stretchr/testify/require"
 	skip "github.com/zackarysantana/goskip"
 )
 
@@ -50,4 +53,14 @@ func ExpectData[K comparable, V comparable](ctx context.Context, streamClient sk
 	}
 
 	return nil
+}
+
+func UpdateInputCollection(ctx context.Context, t *testing.T, controlClient skip.ControlClient, collection string, update []skip.CollectionData) {
+	err := controlClient.UpdateInputCollection(ctx, "users", update)
+	require.NoError(t, err)
+	WaitForIO()
+}
+
+func WaitForIO() {
+	time.Sleep(100 * time.Millisecond)
 }
