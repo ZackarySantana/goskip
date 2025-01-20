@@ -1,4 +1,5 @@
 name: Publish New Tag
+run-name: Pushing git tag ${{ inputs.tag_name }} by @${{ github.actor }}
 
 on:
     workflow_dispatch:
