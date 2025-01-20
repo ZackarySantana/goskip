@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os"
 	"testing"
 	"time"
 
@@ -20,11 +21,12 @@ func TestClient(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	controlClient, streamClient, shutdown, err := CreateClients(ctx, "skip.ts")
+	shutdown, err := examples.StartSkipContainer(ctx, "examples/groups/skip.ts")
 	require.NoError(t, err)
 	defer shutdown()
-	require.NotNil(t, controlClient)
-	require.NotNil(t, streamClient)
+
+	controlClient := skip.NewControlClient(os.Getenv("SKIP_CONTROL_URL"))
+	streamClient := skip.NewStreamClient(os.Getenv("SKIP_STREAM_URL"))
 
 	uuid, err := controlClient.CreateResourceInstance(ctx, "active_friends", 0)
 	require.NoError(t, err)

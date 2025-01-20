@@ -39,11 +39,14 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	controlClient, streamClient, shutdown, err := CreateClients(ctx, "examples/groups/skip.ts")
+	shutdown, err := examples.StartSkipContainer(ctx, "examples/groups/skip.ts")
 	if err != nil {
 		panic(err)
 	}
 	defer shutdown()
+
+	controlClient := skip.NewControlClient(os.Getenv("SKIP_CONTROL_URL"))
+	streamClient := skip.NewStreamClient(os.Getenv("SKIP_STREAM_URL"))
 
 	go func() {
 		uuid, err := controlClient.CreateResourceInstance(ctx, "active_friends", 0)
