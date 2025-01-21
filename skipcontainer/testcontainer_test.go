@@ -19,7 +19,7 @@ func TestSkipContainer(t *testing.T) {
 
 	multiFile1, err := os.Open("multi/skip.ts")
 	require.NoError(t, err)
-	multiFile2, err := os.Open("multi/helpers.ts")
+	multiFile2, err := os.Open("multi/subdir/helpers.ts")
 	require.NoError(t, err)
 
 	mulitfileErr, err := os.Open("multi/skip.ts")
@@ -51,7 +51,7 @@ func TestSkipContainer(t *testing.T) {
 					},
 					skipcontainer.File{
 						Reader:            multiFile2,
-						ContainerFilePath: "/app/helpers.ts",
+						ContainerFilePath: "/app/subdir/helpers.ts",
 					},
 				),
 			},
@@ -66,6 +66,12 @@ func TestSkipContainer(t *testing.T) {
 						ContainerFilePath: "/app/skip.ts",
 					},
 				),
+			},
+		},
+		{
+			name: "With Directory",
+			opts: []testcontainers.ContainerCustomizer{
+				skipcontainer.WithDirectory("multi"),
 			},
 		},
 	} {

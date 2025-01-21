@@ -1,6 +1,6 @@
 import { type InitialData } from "@skipruntime/api";
 
-import { ServiceInputs } from "./skip";
+import { ServiceInputs } from "../skip";
 
 export type UserID = number;
 export type GroupID = number;

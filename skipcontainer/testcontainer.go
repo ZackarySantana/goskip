@@ -1,9 +1,12 @@
 package skipcontainer
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
+	"os"
+	"path/filepath"
 
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -80,6 +83,58 @@ func WithFiles(files ...File) testcontainers.CustomizeRequestOption {
 		}
 
 		req.Files = append(req.Files, containerFiles...)
+		return nil
+	}
+}
+
+// WithDirectory adds all files in the specified directory to the container.
+func WithDirectory(dir string) testcontainers.CustomizeRequestOption {
+	return func(req *testcontainers.GenericContainerRequest) error {
+		info, err := os.Stat(dir)
+		if err != nil {
+			return fmt.Errorf("failed to access directory %q: %w", dir, err)
+		}
+		if !info.IsDir() {
+			return fmt.Errorf("provided path %q is not a directory", dir)
+		}
+
+		err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return fmt.Errorf("error walking the path %q: %w", path, err)
+			}
+
+			if info.IsDir() {
+				return nil
+			}
+
+			file, err := os.Open(path)
+			if err != nil {
+				return fmt.Errorf("failed to open file %q: %w", path, err)
+			}
+			defer file.Close()
+
+			var buffer bytes.Buffer
+			_, err = io.Copy(&buffer, file)
+			if err != nil {
+				return fmt.Errorf("failed to copy file %q into buffer: %w", path, err)
+			}
+
+			relativePath, err := filepath.Rel(dir, path)
+			if err != nil {
+				return fmt.Errorf("failed to determine relative path for %q: %w", path, err)
+			}
+
+			req.Files = append(req.Files, testcontainers.ContainerFile{
+				Reader:            bytes.NewReader(buffer.Bytes()),
+				ContainerFilePath: filepath.Join("/app", relativePath),
+			})
+
+			return nil
+		})
+		if err != nil {
+			return fmt.Errorf("error processing directory %q: %w", dir, err)
+		}
+
 		return nil
 	}
 }
