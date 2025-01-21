@@ -21,7 +21,7 @@ func StartSkipContainer(ctx context.Context, path string) (func(), error) {
 	}
 	defer file.Close()
 
-	container, err := skip.RunContainer(ctx, "lidtop/goskip", skip.WithSkipFile(file))
+	container, err := skip.Run(ctx, "lidtop/goskip", skip.WithSkipFile(file))
 	if err != nil {
 		return nil, fmt.Errorf("starting container: %v", err)
 	}

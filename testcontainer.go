@@ -17,8 +17,8 @@ type SkipContainer struct {
 	streamPort  string
 }
 
-// RunContainer creates an instance of the Skip container type.
-func RunContainer(ctx context.Context, img string, opts ...testcontainers.ContainerCustomizer) (*SkipContainer, error) {
+// Run creates an instance of the Skip container type.
+func Run(ctx context.Context, img string, opts ...testcontainers.ContainerCustomizer) (*SkipContainer, error) {
 	req := testcontainers.ContainerRequest{
 		Image:        img,
 		ExposedPorts: []string{"8080", "8081"},
