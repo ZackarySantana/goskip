@@ -8,12 +8,12 @@ skipFile, err := os.Open("skip.ts")
 defer skipFile.Close()
 
 // Create a new Skip container with a single Skip file.
-skipContainer, err := skip.Run(ctx, "lidtop/goskip", skip.WithSkipFile(skipFile))
+skipContainer, err := skipcontainer.Run(ctx, "lidtop/goskip", skipcontainer.WithSkipFile(skipFile))
 // handle err
 defer skipContainer.Terminate(ctx)
 
 // Create a new Skip container with multiple Skip files.
-skipContainer, err := skip.Run(ctx, "lidtop/goskip", skip.WithSkipFiles(
+skipContainer, err := skipcontainer.Run(ctx, "lidtop/goskip", skipcontainer.WithSkipFiles(
     skipcontainer.WithFiles(
         skipcontainer.File{
             Reader:            skipFile,
@@ -27,7 +27,7 @@ skipContainer, err := skip.Run(ctx, "lidtop/goskip", skip.WithSkipFiles(
 ))
 
 // Or create a new Skip container with a directory of Skip files.
-skipContainer, err := skip.Run(ctx, "lidtop/goskip", skip.WithSkipFiles(
+skipContainer, err := skipcontainer.Run(ctx, "lidtop/goskip", skipcontainer.WithSkipFiles(
     skipcontainer.WithDirectory("/path/to/skip/files"),
 ))
 ```
