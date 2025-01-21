@@ -45,11 +45,11 @@ func TestSkipContainer(t *testing.T) {
 			name: "With Skip Files",
 			opts: []testcontainers.ContainerCustomizer{
 				skipcontainer.WithFiles(
-					testcontainers.ContainerFile{
+					skipcontainer.File{
 						Reader:            multiFile1,
 						ContainerFilePath: "/app/skip.ts",
 					},
-					testcontainers.ContainerFile{
+					skipcontainer.File{
 						Reader:            multiFile2,
 						ContainerFilePath: "/app/helpers.ts",
 					},
@@ -61,7 +61,7 @@ func TestSkipContainer(t *testing.T) {
 			shouldErr: true,
 			opts: []testcontainers.ContainerCustomizer{
 				skipcontainer.WithFiles(
-					testcontainers.ContainerFile{
+					skipcontainer.File{
 						Reader:            mulitfileErr,
 						ContainerFilePath: "/app/skip.ts",
 					},

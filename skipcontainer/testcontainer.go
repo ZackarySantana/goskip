@@ -62,11 +62,24 @@ func WithSkipFile(reader io.Reader) testcontainers.CustomizeRequestOption {
 	}
 }
 
+type File struct {
+	Reader            io.Reader
+	ContainerFilePath string
+}
+
 // WithFiles sets the files to be used in the container. This is used
 // for Skip services that have multiple files.
-func WithFiles(files ...testcontainers.ContainerFile) testcontainers.CustomizeRequestOption {
+func WithFiles(files ...File) testcontainers.CustomizeRequestOption {
 	return func(req *testcontainers.GenericContainerRequest) error {
-		req.Files = append(req.Files, files...)
+		containerFiles := make([]testcontainers.ContainerFile, len(files))
+		for i, file := range files {
+			containerFiles[i] = testcontainers.ContainerFile{
+				Reader:            file.Reader,
+				ContainerFilePath: file.ContainerFilePath,
+			}
+		}
+
+		req.Files = append(req.Files, containerFiles...)
 		return nil
 	}
 }
