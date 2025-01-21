@@ -40,15 +40,14 @@ func Run(ctx context.Context, img string, opts ...testcontainers.ContainerCustom
 			return nil, err
 		}
 	}
+	skipContainer := &SkipContainer{}
 
 	container, err := testcontainers.GenericContainer(ctx, genericContainerReq)
-	if err != nil {
-		return nil, err
+	if container != nil {
+		skipContainer.Container = container
 	}
 
-	return &SkipContainer{
-		Container: container,
-	}, nil
+	return skipContainer, err
 }
 
 // WithSkipFile sets the skip file to be used in the container.
