@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	skip "github.com/zackarysantana/goskip"
+	"github.com/zackarysantana/goskip/skipcontainer"
 )
 
 // StartSkipContainer creates a Skip container and returns a cleanup function to terminate it.
@@ -21,7 +21,7 @@ func StartSkipContainer(ctx context.Context, path string) (func(), error) {
 	}
 	defer file.Close()
 
-	container, err := skip.Run(ctx, "lidtop/goskip", skip.WithSkipFile(file))
+	container, err := skipcontainer.Run(ctx, "lidtop/goskip", skipcontainer.WithSkipFile(file))
 	if err != nil {
 		return nil, fmt.Errorf("starting container: %v", err)
 	}

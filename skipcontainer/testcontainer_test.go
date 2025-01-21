@@ -1,4 +1,4 @@
-package skip_test
+package skipcontainer_test
 
 import (
 	"context"
@@ -8,12 +8,21 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	skip "github.com/zackarysantana/goskip"
+	"github.com/zackarysantana/goskip/skipcontainer"
 
 	"github.com/testcontainers/testcontainers-go"
 )
 
 func TestSkipContainer(t *testing.T) {
-	skipFile, err := os.Open("testcontainer.ts")
+	singleFile, err := os.Open("single/skip.ts")
+	require.NoError(t, err)
+
+	multiFile1, err := os.Open("multi/skip.ts")
+	require.NoError(t, err)
+	multiFile2, err := os.Open("multi/helpers.ts")
+	require.NoError(t, err)
+
+	mulitfileErr, err := os.Open("multi/skip.ts")
 	require.NoError(t, err)
 
 	for _, tc := range []struct {
@@ -29,7 +38,34 @@ func TestSkipContainer(t *testing.T) {
 		{
 			name: "With Skip File",
 			opts: []testcontainers.ContainerCustomizer{
-				skip.WithSkipFile(skipFile),
+				skipcontainer.WithSkipFile(singleFile),
+			},
+		},
+		{
+			name: "With Skip Files",
+			opts: []testcontainers.ContainerCustomizer{
+				skipcontainer.WithFiles(
+					testcontainers.ContainerFile{
+						Reader:            multiFile1,
+						ContainerFilePath: "/app/skip.ts",
+					},
+					testcontainers.ContainerFile{
+						Reader:            multiFile2,
+						ContainerFilePath: "/app/helpers.ts",
+					},
+				),
+			},
+		},
+		{
+			name:      "With Incomplete Skip Files",
+			shouldErr: true,
+			opts: []testcontainers.ContainerCustomizer{
+				skipcontainer.WithFiles(
+					testcontainers.ContainerFile{
+						Reader:            mulitfileErr,
+						ContainerFilePath: "/app/skip.ts",
+					},
+				),
 			},
 		},
 	} {
@@ -40,10 +76,10 @@ func TestSkipContainer(t *testing.T) {
 			ctx, cancel := context.WithCancel(context.Background())
 			defer cancel()
 
-			skipContainer, err := skip.Run(ctx, "lidtop/goskip", tc.opts...)
+			skipContainer, err := skipcontainer.Run(ctx, "lidtop/goskip", tc.opts...)
 			testcontainers.CleanupContainer(t, skipContainer)
 			if tc.shouldErr {
-				require.Error(t, err)
+				assert.Error(t, err)
 				return
 			}
 			require.NoError(t, err)

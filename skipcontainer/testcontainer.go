@@ -1,4 +1,4 @@
-package skip
+package skipcontainer
 
 import (
 	"context"
@@ -64,7 +64,7 @@ func WithSkipFile(reader io.Reader) testcontainers.CustomizeRequestOption {
 
 // WithFiles sets the files to be used in the container. This is used
 // for Skip services that have multiple files.
-func WithFiles(files []testcontainers.ContainerFile) testcontainers.CustomizeRequestOption {
+func WithFiles(files ...testcontainers.ContainerFile) testcontainers.CustomizeRequestOption {
 	return func(req *testcontainers.GenericContainerRequest) error {
 		req.Files = append(req.Files, files...)
 		return nil
