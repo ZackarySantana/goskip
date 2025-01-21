@@ -100,17 +100,7 @@ This repository also manages a simple Skip image [goskip-image](./goskip-image) 
 
 ## Test Container
 
-This package also exposes a test container that can be used for testing and minimal local development.
-
-```go
-skipFile, err := os.Open("skip.ts")
-// handle err
-defer skipFile.Close()
-
-skipContainer, err := skip.Run(ctx, "lidtop/goskip", skip.WithSkipFile(skipFile))
-// handle err
-defer skipContainer.Terminate(ctx)
-```
+This package also exposes a test container that can be used for testing and minimal local development. More information can be found in the [skipcontainer](./skipcontainer) directory.
 
 ## Contributing
 

@@ -72,6 +72,7 @@ type File struct {
 
 // WithFiles sets the files to be used in the container. This is used
 // for Skip services that have multiple files.
+// This requires one of the files to be placed at /app/skip.ts
 func WithFiles(files ...File) testcontainers.CustomizeRequestOption {
 	return func(req *testcontainers.GenericContainerRequest) error {
 		containerFiles := make([]testcontainers.ContainerFile, len(files))
@@ -87,7 +88,9 @@ func WithFiles(files ...File) testcontainers.CustomizeRequestOption {
 	}
 }
 
-// WithDirectory adds all files in the specified directory to the container.
+// WithDirectory adds all files in the specified directory to the container. It will add all files in the subdirectories as well.
+// This requires one of the files to be named skip.ts at the root
+// of the directory. Files are automatically placed in the /app directory.
 func WithDirectory(dir string) testcontainers.CustomizeRequestOption {
 	return func(req *testcontainers.GenericContainerRequest) error {
 		info, err := os.Stat(dir)
