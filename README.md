@@ -98,6 +98,20 @@ These are the examples available:
 
 This repository also manages a simple Skip image [goskip-image](./goskip-image) that's published to Docker Hub as [lidtop/goskip](https://hub.docker.com/repository/docker/lidtop/goskip).
 
+## Test Container
+
+This package also exposes a test container that can be used for testing and minimal local development.
+
+```go
+skipFile, err := os.Open("skip.ts")
+// handle err
+defer skipFile.Close()
+
+skipContainer, err := skip.Run(ctx, "lidtop/goskip", skip.WithSkipFile(skipFile))
+// handle err
+defer skipContainer.Terminate(ctx)
+```
+
 ## Contributing
 
 Contributions and pull requests are welcome! Feel free to drop an issue if you have any ideas or suggestions.
