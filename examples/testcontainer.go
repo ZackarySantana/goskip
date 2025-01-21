@@ -6,8 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
+	skip "github.com/zackarysantana/goskip"
 )
 
 // StartSkipContainer creates a Skip container and returns a cleanup function to terminate it.
@@ -22,31 +21,11 @@ func StartSkipContainer(ctx context.Context, path string) (func(), error) {
 	}
 	defer file.Close()
 
-	req := testcontainers.ContainerRequest{
-		Image:        "lidtop/goskip",
-		ExposedPorts: []string{"8080", "8081"},
-		WaitingFor: wait.ForAll(
-			wait.ForLog("Skip control service listening on port 8081"),
-			wait.ForListeningPort("8081"),
-			wait.ForLog("Skip streaming service listening on port 8080"),
-			wait.ForListeningPort("8080"),
-		),
-		Env: map[string]string{},
-		Files: []testcontainers.ContainerFile{
-			{
-				Reader:            file,
-				ContainerFilePath: "/app/skip.ts",
-			},
-		},
-	}
-
-	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
-		ContainerRequest: req,
-		Started:          true,
-	})
+	container, err := skip.RunContainer(ctx, "lidtop/goskip", skip.WithSkipFile(file))
 	if err != nil {
 		return nil, fmt.Errorf("starting container: %v", err)
 	}
+
 	cleanup := func() {
 		start := time.Now()
 		fmt.Println("Cleaning up skip container...")
@@ -57,27 +36,22 @@ func StartSkipContainer(ctx context.Context, path string) (func(), error) {
 		fmt.Printf("Skip container cleaned up (%v).\n", time.Since(start).Round(time.Millisecond))
 	}
 
-	host, err := container.Host(ctx)
+	controlURL, err := container.GetControlURL()
 	if err != nil {
-		return nil, fmt.Errorf("getting container host: %v", err)
+		return nil, fmt.Errorf("getting control url: %v", err)
 	}
 
-	controlPort, err := container.MappedPort(ctx, "8081")
+	streamURL, err := container.GetStreamURL()
 	if err != nil {
-		return nil, fmt.Errorf("getting control service port: %v", err)
+		return nil, fmt.Errorf("getting stream url: %v", err)
 	}
 
-	streamPort, err := container.MappedPort(ctx, "8080")
-	if err != nil {
-		return nil, fmt.Errorf("getting stream service port: %v", err)
-	}
-
-	err = os.Setenv("SKIP_CONTROL_URL", fmt.Sprintf("http://%s:%s/v1", host, controlPort.Port()))
+	err = os.Setenv("SKIP_CONTROL_URL", controlURL)
 	if err != nil {
 		return nil, fmt.Errorf("setting SKIP_CONTROL_URL: %v", err)
 	}
 
-	err = os.Setenv("SKIP_STREAM_URL", fmt.Sprintf("http://%s:%s/v1", host, streamPort.Port()))
+	err = os.Setenv("SKIP_STREAM_URL", streamURL)
 	if err != nil {
 		return nil, fmt.Errorf("setting SKIP_STREAM_URL: %v", err)
 	}
