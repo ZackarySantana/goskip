@@ -1,3 +1,6 @@
+genmock:
+	mockgen -destination=mock_test.go -package=skip_test . httpClient
+
 skip:
 	@if [ -z "$(EXAMPLE)" ]; then \
 		echo "Error: EXAMPLE is not set. Please provide it as an environment variable (e.g., make run EXAMPLE=groups)."; \
