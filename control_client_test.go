@@ -83,7 +83,7 @@ func TestControlClient(t *testing.T) {
 			require.NoError(t, err)
 
 			mockHttpClient := mocks.NewMockhttpClient(t)
-			mockHttpClient.EXPECT().Do(expectedRequest).Return(&http.Response{
+			mockHttpClient.EXPECT().Do(mock.MatchedBy(matchRequest(expectedRequest))).Return(&http.Response{
 				Body:       io.NopCloser(bytes.NewBuffer(expectedResponseBody)),
 				StatusCode: http.StatusOK,
 			}, nil)
