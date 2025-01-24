@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net/http"
 )
 
 // ControlClient defines access to Skip's Control API.
@@ -30,17 +31,21 @@ type ControlClient interface {
 }
 
 type controlClientImpl struct {
-	baseURL string
+	baseURL    string
+	httpClient httpClient
 }
 
 // NewControlClient creates a new instance of ControlClient.
-func NewControlClient(baseURL string) ControlClient {
-	return &controlClientImpl{baseURL: baseURL}
+func NewControlClient(baseURL string, httpClient httpClient) ControlClient {
+	if httpClient == nil {
+		httpClient = http.DefaultClient
+	}
+	return &controlClientImpl{baseURL: baseURL, httpClient: httpClient}
 }
 
 func (c *controlClientImpl) GetResourceSnapshot(ctx context.Context, resource string, params interface{}) ([]byte, error) {
 	url := fmt.Sprintf("%s/snapshot/%s", c.baseURL, resource)
-	resp, err := sendRequest(ctx, "POST", url, params)
+	resp, err := sendRequest(ctx, c.httpClient, "POST", url, params)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch resource snapshot: %w", err)
 	}
@@ -59,7 +64,7 @@ func (c *controlClientImpl) GetResourceKey(ctx context.Context, resource string,
 		"key":    key,
 		"params": params,
 	}
-	resp, err := sendRequest(ctx, "POST", url, body)
+	resp, err := sendRequest(ctx, c.httpClient, "POST", url, body)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch resource key: %w", err)
 	}
@@ -74,7 +79,7 @@ func (c *controlClientImpl) GetResourceKey(ctx context.Context, resource string,
 
 func (c *controlClientImpl) UpdateInputCollection(ctx context.Context, collection string, updates []CollectionData) error {
 	url := fmt.Sprintf("%s/inputs/%s", c.baseURL, collection)
-	resp, err := sendRequest(ctx, "PATCH", url, updates)
+	resp, err := sendRequest(ctx, c.httpClient, "PATCH", url, updates)
 	if err != nil {
 		return fmt.Errorf("failed to update input collection: %w", err)
 	}
@@ -89,7 +94,7 @@ func (c *controlClientImpl) UpdateInputCollection(ctx context.Context, collectio
 
 func (c *controlClientImpl) CreateResourceInstance(ctx context.Context, resource string, params interface{}) (string, error) {
 	url := fmt.Sprintf("%s/streams/%s", c.baseURL, resource)
-	resp, err := sendRequest(ctx, "POST", url, params)
+	resp, err := sendRequest(ctx, c.httpClient, "POST", url, params)
 	if err != nil {
 		return "", fmt.Errorf("failed to create resource: %w", err)
 	}
@@ -109,7 +114,7 @@ func (c *controlClientImpl) CreateResourceInstance(ctx context.Context, resource
 
 func (c *controlClientImpl) DeleteResourceInstance(ctx context.Context, uuid string) error {
 	url := fmt.Sprintf("%s/streams/%s", c.baseURL, uuid)
-	resp, err := sendRequest(ctx, "DELETE", url, nil)
+	resp, err := sendRequest(ctx, c.httpClient, "DELETE", url, nil)
 	if err != nil {
 		return fmt.Errorf("failed to delete resource: %w", err)
 	}

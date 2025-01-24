@@ -93,7 +93,7 @@ func TestSkipContainer(t *testing.T) {
 			controlService, err := skipContainer.GetControlURL()
 			require.NoError(t, err)
 
-			controlClient := skip.NewControlClient(controlService)
+			controlClient := skip.NewControlClient(controlService, nil)
 
 			uuid, err := controlClient.CreateResourceInstance(ctx, "active_friends", 0)
 			require.NoError(t, err)

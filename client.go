@@ -8,8 +8,11 @@ import (
 	"strings"
 )
 
-// CollectionUpdate represents an update to a key-value pair in a collection.
-func sendRequest(ctx context.Context, method, url string, body interface{}) (*http.Response, error) {
+type httpClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
+func sendRequest(ctx context.Context, client httpClient, method, url string, body interface{}) (*http.Response, error) {
 	var requestBody *strings.Reader
 	if body != nil {
 		data, err := json.Marshal(body)
@@ -30,7 +33,6 @@ func sendRequest(ctx context.Context, method, url string, body interface{}) (*ht
 		req.Header.Set("Content-Type", "application/json")
 	}
 
-	client := &http.Client{}
 	return client.Do(req)
 }
 

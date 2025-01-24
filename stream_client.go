@@ -3,6 +3,7 @@ package skip
 import (
 	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/tmaxmax/go-sse"
 )
@@ -22,17 +23,21 @@ type StreamClient interface {
 }
 
 type streamClientImpl struct {
-	baseURL string
+	baseURL    string
+	httpClient httpClient
 }
 
 // NewStreamClient creates a new instance of StreamClient.
-func NewStreamClient(baseURL string) StreamClient {
-	return &streamClientImpl{baseURL: baseURL}
+func NewStreamClient(baseURL string, httpClient httpClient) StreamClient {
+	if httpClient == nil {
+		httpClient = http.DefaultClient
+	}
+	return &streamClientImpl{baseURL: baseURL, httpClient: httpClient}
 }
 
 func (s *streamClientImpl) Stream(ctx context.Context, uuid string, callback func(event StreamType, data []byte) error) error {
 	url := fmt.Sprintf("%s/streams/%s", s.baseURL, uuid)
-	resp, err := sendRequest(ctx, "GET", url, nil)
+	resp, err := sendRequest(ctx, s.httpClient, "GET", url, nil)
 	if err != nil {
 		return fmt.Errorf("sending stream data request: %w", err)
 	}

@@ -20,8 +20,8 @@ func TestClient(t *testing.T) {
 	require.NoError(t, err)
 	defer shutdown()
 
-	controlClient := skip.NewControlClient(os.Getenv("SKIP_CONTROL_URL"))
-	streamClient := skip.NewStreamClient(os.Getenv("SKIP_STREAM_URL"))
+	controlClient := skip.NewControlClient(os.Getenv("SKIP_CONTROL_URL"), nil)
+	streamClient := skip.NewStreamClient(os.Getenv("SKIP_STREAM_URL"), nil)
 
 	uuid, err := controlClient.CreateResourceInstance(ctx, "active_friends", 0)
 	require.NoError(t, err)
