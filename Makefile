@@ -1,5 +1,5 @@
-genmock:
-	mockgen -destination=mock_test.go -package=skip_test . httpClient
+mock:
+	go run github.com/vektra/mockery/v2@v2.51.1
 
 skip:
 	@if [ -z "$(EXAMPLE)" ]; then \

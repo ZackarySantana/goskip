@@ -1,0 +1,15 @@
+with-expecter: true
+resolve-type-alias: false
+issue-845-fix: true
+
+dir: mocks
+outpkg: mocks
+
+packages:
+    github.com/zackarysantana/goskip:
+        interfaces:
+            ControlClient:
+            StreamClient:
+            httpClient:
+                config:
+                    dir: internal/mocks
