@@ -96,7 +96,7 @@ These are the examples available:
 
 ## goskip Image
 
-This repository also manages a simple Skip image [goskip-image](./goskip-image) that's published to Docker Hub as [lidtop/goskip](https://hub.docker.com/repository/docker/lidtop/goskip).
+This repository also manages a simple Skip image [goskip-image](./goskip-image) that's published to Docker Hub as [lidtop/goskip](https://hub.docker.com/repository/docker/lidtop/goskip) and [lidtop/goskip-dev](https://hub.docker.com/repository/docker/lidtop/goskip-dev).
 
 ## Test Container
 

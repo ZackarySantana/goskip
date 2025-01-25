@@ -11,3 +11,5 @@ docker run -v ./examples/$(EXAMPLE)/skip.ts:/app/skip.ts -p 8080:8080 -p 8081:80
 ## Docker Hub
 
 This is published to Docker Hub as [lidtop/goskip](https://hub.docker.com/repository/docker/lidtop/goskip).
+
+A development image is also available as [lidtop/goskip-dev](https://hub.docker.com/repository/docker/lidtop/goskip-dev) that runs the Skip server in Bun's watch mode.
