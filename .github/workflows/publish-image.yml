@@ -33,7 +33,7 @@ jobs:
 
             - name: Build and tag Docker prod image
               run: |
-                  docker build -t lidtop/goskip:latest Dockerfile
+                  docker build -t lidtop/goskip:latest -f Dockerfile . 
                   docker tag lidtop/goskip:latest lidtop/goskip:${{ steps.semver.outputs.version }}
 
             - name: Push Docker prod image
@@ -43,7 +43,7 @@ jobs:
 
             - name: Build and tag Docker dev image
               run: |
-                  docker build -t lidtop/goskip-dev:latest Dockerfile.dev
+                  docker build -t lidtop/goskip-dev:latest -f Dockerfile.dev . 
                   docker tag lidtop/goskip-dev:latest lidtop/goskip-dev:${{ steps.semver.outputs.version }}
 
             - name: Push Docker dev image
