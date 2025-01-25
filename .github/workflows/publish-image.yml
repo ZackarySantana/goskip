@@ -31,12 +31,22 @@ jobs:
                   username: ${{ secrets.DOCKER_USERNAME }}
                   password: ${{ secrets.DOCKER_PASSWORD }}
 
-            - name: Build and tag Docker image
+            - name: Build and tag Docker prod image
               run: |
-                  docker build -t lidtop/goskip:latest .
+                  docker build -t lidtop/goskip:latest Dockerfile
                   docker tag lidtop/goskip:latest lidtop/goskip:${{ steps.semver.outputs.version }}
 
-            - name: Push Docker image
+            - name: Push Docker prod image
               run: |
                   docker push lidtop/goskip:${{ steps.semver.outputs.version }}
                   docker push lidtop/goskip:latest
+
+            - name: Build and tag Docker dev image
+              run: |
+                  docker build -t lidtop/goskip-dev:latest Dockerfile.dev
+                  docker tag lidtop/goskip-dev:latest lidtop/goskip-dev:${{ steps.semver.outputs.version }}
+
+            - name: Push Docker dev image
+              run: |
+                  docker push lidtop/goskip-dev:${{ steps.semver.outputs.version }}
+                  docker push lidtop/goskip-dev:latest
