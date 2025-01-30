@@ -43,6 +43,10 @@ func (s *streamClientImpl) Stream(ctx context.Context, uuid string, callback fun
 	}
 	defer resp.Body.Close()
 
+	if isUnsuccessfulStatus(resp.StatusCode) {
+		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+
 	sse.Read(resp.Body, nil)(func(ev sse.Event, readErr error) bool {
 		if readErr != nil {
 			err = fmt.Errorf("reading stream data: %w", readErr)

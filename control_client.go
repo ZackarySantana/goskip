@@ -51,7 +51,7 @@ func (c *controlClientImpl) GetResourceSnapshot(ctx context.Context, resource st
 	}
 	defer resp.Body.Close()
 
-	if isSuccessStatus(resp.StatusCode) {
+	if isUnsuccessfulStatus(resp.StatusCode) {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
@@ -70,7 +70,7 @@ func (c *controlClientImpl) GetResourceKey(ctx context.Context, resource string,
 	}
 	defer resp.Body.Close()
 
-	if isSuccessStatus(resp.StatusCode) {
+	if isUnsuccessfulStatus(resp.StatusCode) {
 		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
@@ -85,7 +85,7 @@ func (c *controlClientImpl) UpdateInputCollection(ctx context.Context, collectio
 	}
 	defer resp.Body.Close()
 
-	if isSuccessStatus(resp.StatusCode) {
+	if isUnsuccessfulStatus(resp.StatusCode) {
 		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
@@ -100,7 +100,7 @@ func (c *controlClientImpl) CreateResourceInstance(ctx context.Context, resource
 	}
 	defer resp.Body.Close()
 
-	if isSuccessStatus(resp.StatusCode) {
+	if isUnsuccessfulStatus(resp.StatusCode) {
 		return "", fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 
@@ -120,7 +120,7 @@ func (c *controlClientImpl) DeleteResourceInstance(ctx context.Context, uuid str
 	}
 	defer resp.Body.Close()
 
-	if isSuccessStatus(resp.StatusCode) {
+	if isUnsuccessfulStatus(resp.StatusCode) {
 		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
 	}
 

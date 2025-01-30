@@ -35,6 +35,6 @@ func sendRequest(ctx context.Context, client httpClient, method, url string, bod
 	return client.Do(req)
 }
 
-func isSuccessStatus(statusCode int) bool {
+func isUnsuccessfulStatus(statusCode int) bool {
 	return statusCode < http.StatusOK || statusCode >= http.StatusMultipleChoices
 }
