@@ -26,8 +26,8 @@ func WithGetUUIDFromPath(getUUIDFromPath func(path string) string) func(*Options
 
 // New creates a reverse proxy that redirects requests
 // served to it to the given URL. The given URL must have a path
-// that has a placeholder for the UUID (e.g. %s). For most Skip
-// services, this will be "/v1/streams/%s".
+// that has a placeholder for the UUID (e.g. %s or <uuid>). For most Skip
+// services, this will be "/v1/streams/%s" or "/v1/streams/<uuid>".
 func New(url *url.URL, options ...func(*Options)) (*httputil.ReverseProxy, error) {
 	opts := &Options{
 		GetUUIDFromPath: func(path string) string {
@@ -55,6 +55,7 @@ func New(url *url.URL, options ...func(*Options)) (*httputil.ReverseProxy, error
 			url := *url
 			pr.Out.URL = &url
 			pr.Out.URL.Path = fmt.Sprintf(pr.Out.URL.Path, uuid)
+			pr.Out.URL.Path = strings.ReplaceAll(pr.Out.URL.Path, "<uuid>", uuid)
 		},
 		Transport: &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
