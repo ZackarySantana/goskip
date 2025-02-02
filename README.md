@@ -82,6 +82,26 @@ snapshot, err := skip.ReadResourceSnapshot[<key_type>, <value_type>](controlClie
 key, err := skip.ReadResourceKey[<value_type>](controlClient.GetResourceKey(ctx, "<resource_name>", <resource_key>, <params>))
 ```
 
+### Reverse Proxy Stream Service
+
+The Skip service exposes a stream service that is suggested to be used directly with clients. However, if you want to add authentication behind it, logging, or other middleware, you can create a reverse proxy
+and proxy the stream service. Here's an example of how to do that:
+
+```go
+// Import the reverse proxy package.
+import skip_reverse_proxy "github.com/zackarysantana/goskip/reverse_proxy"
+
+
+// Create the reverse proxy. The URL should contain '%s' or '<uuid>' in the path, this is replaced
+// with the resource uuid per request.
+rp := skip_reverse_proxy.New(&url.URL{Scheme: "http", Host: "<stream_service_url>", Path: "/v1/streams/%s"})
+
+// ...
+
+// Serve the reverse proxy. This example is using the standard library `http.ServeMux`.
+mux.Handle("GET /streams/", rp)
+```
+
 ## Examples
 
 The [examples](./examples) directory contains examples that have a `client.go` file and a `skip` directory. To run an example, run:
