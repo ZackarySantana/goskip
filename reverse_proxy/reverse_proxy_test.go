@@ -17,8 +17,7 @@ func TestReverseProxy(t *testing.T) {
 	defer cancel()
 
 	t.Run("HandlesRequest", func(t *testing.T) {
-		rp, err := skip_reverse_proxy.New(&url.URL{Scheme: "http", Host: "localhost:8080", Path: "/v1/%s"})
-		require.NoError(t, err)
+		rp := skip_reverse_proxy.New(&url.URL{Scheme: "http", Host: "localhost:8080", Path: "/v1/%s"})
 		require.NotNil(t, rp)
 
 		t.Run("NoServer", func(t *testing.T) {
@@ -41,12 +40,11 @@ func TestReverseProxy(t *testing.T) {
 			}))
 			defer srv.Close()
 
-			rp, err := skip_reverse_proxy.New(&url.URL{
+			rp := skip_reverse_proxy.New(&url.URL{
 				Scheme: "http",
 				Host:   srv.URL[7:],
 				Path:   "/v1/%s",
 			})
-			require.NoError(t, err)
 			require.NotNil(t, rp)
 
 			t.Run("FirstRequest", func(t *testing.T) {
@@ -84,12 +82,11 @@ func TestReverseProxy(t *testing.T) {
 			}))
 			defer srv.Close()
 
-			rp, err := skip_reverse_proxy.New(&url.URL{
+			rp := skip_reverse_proxy.New(&url.URL{
 				Scheme: "http",
 				Host:   srv.URL[7:],
 				Path:   "/%s/unique_path",
 			})
-			require.NoError(t, err)
 			require.NotNil(t, rp)
 
 			t.Run("FirstRequest", func(t *testing.T) {
@@ -127,7 +124,7 @@ func TestReverseProxy(t *testing.T) {
 			}))
 			defer srv.Close()
 
-			rp, err := skip_reverse_proxy.New(
+			rp := skip_reverse_proxy.New(
 				&url.URL{
 					Scheme: "http",
 					Host:   srv.URL[7:],
@@ -137,7 +134,6 @@ func TestReverseProxy(t *testing.T) {
 					return path[11:15]
 				}),
 			)
-			require.NoError(t, err)
 			require.NotNil(t, rp)
 
 			t.Run("FirstRequest", func(t *testing.T) {

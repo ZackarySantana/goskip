@@ -28,7 +28,7 @@ func WithGetUUIDFromPath(getUUIDFromPath func(path string) string) func(*Options
 // served to it to the given URL. The given URL must have a path
 // that has a placeholder for the UUID (e.g. %s or <uuid>). For most Skip
 // services, this will be "/v1/streams/%s" or "/v1/streams/<uuid>".
-func New(url *url.URL, options ...func(*Options)) (*httputil.ReverseProxy, error) {
+func New(url *url.URL, options ...func(*Options)) *httputil.ReverseProxy {
 	opts := &Options{
 		GetUUIDFromPath: func(path string) string {
 			streamsIndex := strings.Index(path, "/streams/")
@@ -68,5 +68,5 @@ func New(url *url.URL, options ...func(*Options)) (*httputil.ReverseProxy, error
 		FlushInterval: 100 * time.Millisecond,
 	}
 
-	return rp, nil
+	return rp
 }
