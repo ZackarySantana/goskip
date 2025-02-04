@@ -6,7 +6,13 @@ COPY package.json bun.lock ./
 
 RUN bun install
 
+COPY start.sh ./
+
 EXPOSE 8080
 EXPOSE 8081
 
-CMD ["bun", "run", "skip.ts"]
+# Because of https://github.com/oven-sh/bun/issues/6988
+# We need to use a shell script to install dependencies
+# and then run the app
+
+CMD ["./start.sh"]
